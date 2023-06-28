@@ -1,10 +1,15 @@
+body {
+  margin: 20px;
+}
 #search-form {
   background-color: blue;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: auto;
   padding: 7px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .searchQuery {
   height: 31px;
