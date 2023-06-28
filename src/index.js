@@ -1,57 +1,80 @@
-// import Notiflix from 'notiflix';
-// import { fetchBreeds, fetchCatByBreed } from './js/cat-api';
-// import SlimSelect from 'slim-select';
-// function newSelect() {
-//   new SlimSelect({
-//     select: document.querySelector('.breed-select'),
-//   });
-// }
+import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+const lightbox = new SimpleLightbox('.image');
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-// const select = document.querySelector('.breed-select');
-// const loader = document.querySelector('.loader');
-// const catInfo = document.querySelector('.cat-info');
-// const error = document.querySelector('.error');
-// loader.textContent = '';
-// error.textContent = '';
+import { createGalleryMarkup } from './js/markup';
+import { getImages } from './js/api';
 
-// select.classList.add('visually-hidden');
-// function showLoader() {
-//   loader.classList.remove('visually-hidden');
-//   catInfo.classList.add('visually-hidden');
-// }
-// function hideLoader() {
-//   loader.classList.add('visually-hidden');
-// }
+const searchForm = document.querySelector('#search-form');
+const gallery = document.querySelector('.gallery');
+const loadMoreBtn = document.querySelector('.load-more');
+const searchQuery = document.querySelector('.searchQuery');
+let page = 1;
+const perPage = 40;
+let q = '';
+let totalHits = 0;
+loadMoreBtn.style.display = 'none';
 
-// select.innerHTML = '<option value= Tap here >Tap here</option>';
-// function createOptions(data) {
-//   data.map(elem => {
-//     select.innerHTML += `<option value="${elem.reference_image_id}">${elem.name}</option>`;
-//   });
-//   select.classList.remove('visually-hidden');
-//   hideLoader();
-// }
-// function createCatInfo(data) {
-//   catInfo.innerHTML = `<img class="image" src="${data.url}" ><div class = "text-holder"><h1>${data.breeds[0].name}</h1><p>${data.breeds[0].description}</p><b>Temperament: </b><span> ${data.breeds[0].temperament}</span></div>`;
-//   catInfo.classList.remove('visually-hidden');
-//   hideLoader();
-//   console.log(data);
-// }
+searchForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  q = searchQuery.value;
+  page = 1;
+  totalHits = 0;
+  gallery.innerHTML = '';
+  searchQuery.value = '';
+  loadMoreBtn.style.display = 'none';
 
-// fetchBreeds().then(createOptions).then(newSelect).catch(fetchError);
-// select.addEventListener('change', event => {
-//   showLoader();
-//   catInfo.classList.add('visually-hidden');
-//   fetchCatByBreed(event.target.value).then(createCatInfo).catch(fetchError);
-//   console.log(event.target.value);
-// });
+  if (q === '') {
+    Notiflix.Notify.warning('Please fill in the search field.');
+    return;
+  }
 
-// function fetchError() {
-//   if (select.value === 'Tap') {
-//     Notiflix.Notify.failure('Please, choose a breed');
-//   } else {
-//     Notiflix.Notify.failure(
-//       'Oops! Something went wrong! Try reloading the page!'
-//     );
-//   }
-// }
+  try {
+    const response = await getImages(q, page, perPage);
+    const { data } = response;
+    totalHits = data.totalHits;
+
+    if (totalHits === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+
+    gallery.insertAdjacentHTML('beforeend', createGalleryMarkup(data.hits));
+    loadMoreBtn.style.display = 'block';
+
+    if (totalHits <= page * perPage) {
+      loadMoreBtn.style.display = 'none';
+    }
+
+    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+    lightbox.refresh();
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+loadMoreBtn.addEventListener('click', async () => {
+  page += 1;
+
+  try {
+    const response = await getImages(q, page, perPage);
+
+    const { data } = response;
+
+    gallery.insertAdjacentHTML('beforeend', createGalleryMarkup(data.hits));
+
+    if (page * perPage >= totalHits) {
+      loadMoreBtn.style.display = 'none';
+      Notiflix.Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
+
+    lightbox.refresh();
+  } catch (error) {
+    console.log(error);
+  }
+});

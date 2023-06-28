@@ -1,76 +1,89 @@
-/* .loader {
-  width: 48px;
-  height: 48px;
-  display: inline-block;
-  position: relative;
-  top: 40vh;
-  left: 47%;
-  scale: 5;
-}
-.loader::after,
-.loader::before {
-  content: '';
-  box-sizing: border-box;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid #000;
-  position: absolute;
-  left: 0;
-  top: 0;
-  animation: animloader 2s linear infinite;
-}
-.loader::after {
-  animation-delay: 1s;
-}
-
-@keyframes animloader {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
-
-.cat-info {
-  margin-top: 40px;
+#search-form {
+  background-color: blue;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: start;
+  width: 100%;
+  padding: 7px;
 }
-.image {
-  width: 45%;
-}
-.text-holder {
-  padding: 25px;
-  padding-top: 0;
-  font-size: 28;
-}
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
+.searchQuery {
+  height: 31px;
   border: 0;
-  padding: 0;
+  width: 330px;
+  font-size: 20;
+  padding-left: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+#search-form button {
+  height: 30px;
+  width: 32;
+  border: 0;
+  border-radius: 3px;
+  position: relative;
+  left: -34px;
+}
+.icon {
+  scale: 1.2;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+#search-form button:hover {
+  cursor: pointer;
+}
+#search-form button:hover .icon {
+  fill: grey;
+}
 
-  white-space: nowrap;
-  clip-path: inset(100%);
-  clip: rect(0 0 0 0);
-  overflow: hidden;
+.gallery {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  row-gap: 60px;
+  column-gap: 25px;
+  flex-wrap: wrap;
 }
-.ss-main {
-  border: solid;
+
+.photo-card {
+  border-bottom: 1px solid #000;
 }
-.ss-single {
-  font-size: 28;
+
+.image img {
+  width: 400px;
+  height: 270px;
 }
-.ss-list {
-  font-size: 26;
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 15px;
+  flex-wrap: wrap;
 }
-.ss-search {
-  font-size: 26;
-} */
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.load-more {
+  font-size: 26px;
+  width: 150px;
+  height: 50px;
+  background-color: blue;
+  color: #fff;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 6px;
+  border: 0;
+  margin-bottom: 40px;
+}
+.load-more:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
